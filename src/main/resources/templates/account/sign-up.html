@@ -16,7 +16,7 @@
 </head>
 <body class="bg-light">
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <a class="navbar-brand" href="/" th:href="@{/}">
+        <a class="navbar-brand" th:href="@{/}">
             <img src="/images/logo_s.png" style="padding-left: 10px;" width="40" height="30">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -37,10 +37,10 @@
 
             <ul class="navbar-nav justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/login}">로그인</a>
+                    <a class="nav-link"  th:href="@{/login}">로그인</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{signup}">가입</a>
+                    <a class="nav-link"  th:href="@{signup}">가입</a>
                 </li>
             </ul>
         </div>
@@ -52,16 +52,16 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <form class="needs-validation col-sm-6" action="#" th:action="@{signup}" th:object="${signUpForm}" method="post"
+        <form class="needs-validation col-sm-6" th:action="@{/sign-up}" th:object="${signUpForm}" method="post"
               novalidate>
             <div class="form-group">
                 <label for="nickname">닉네임</label>
-                <input id="nickname" type="text" th:field="*{nickname}" class="form-control" placeholder="whiteship"
+                <input id="nickname" type="text" th:field="*{nickname}" class="form-control" placeholder="kyw"
                        aria-describedby="nicknameHelp" required minlength="3" maxlength="20">
                 <small id="nicknameHelp" class="form-text text-muted">
                     공백없이 문자와 숫자로만 3자 이상 20자 이내로 입력하세요. 가입 후에 변경할 수 있습니다.
                 </small>
-                <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                <small class="invalid-feedback">닉네임을 입력하세요.</small> <!--프론트 검사하는 부분 -->
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
             </div>
 
@@ -81,7 +81,7 @@
                 <input id="password" type="password" th:field="*{password}" class="form-control"
                        aria-describedby="passwordHelp" required minlength="8" maxlength="50">
                 <small id="passwordHelp" class="form-text text-muted">
-                    8자 이상 50자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
+                    8자 이상 20자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
                 </small>
                 <small class="invalid-feedback">패스워드를 입력하세요.</small>
                 <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
