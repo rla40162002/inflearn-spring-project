@@ -1,5 +1,6 @@
 package com.studylecture.account;
 
+import com.studylecture.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,11 @@ class AccountControllerTest {
                 )
                 .andExpect(status().is3xxRedirection()) // 리다이렉션 응답
                 .andExpect(view().name("redirect:/"));
+
+        Account account = accountRepository.findByEmail("rla4062002@naver.com");
+
+        assertNotNull(account);
+        assertNotEquals(account.getPassword(), "12345678");
 
         assertTrue(accountRepository.existsByEmail("rla4062002@naver.com")); // 이메일 중복여부
         then(javaMailSender).should().send(any(SimpleMailMessage.class)); // SimpleMailMessage타입의 아무거나라도 들어왔는가 확인
