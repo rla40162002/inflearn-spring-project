@@ -69,9 +69,10 @@ class AccountControllerTest {
 
         Account account = accountRepository.findByEmail("rla4062002@naver.com");
 
+
         assertNotNull(account);
         assertNotEquals(account.getPassword(), "12345678");
-
+        assertNotNull(account.getEmailCheckToken());
         assertTrue(accountRepository.existsByEmail("rla4062002@naver.com")); // 이메일 중복여부
         then(javaMailSender).should().send(any(SimpleMailMessage.class)); // SimpleMailMessage타입의 아무거나라도 들어왔는가 확인
     }

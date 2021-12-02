@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
     private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     @InitBinder("signUpForm") // 33번째줄 변수명이 아닌 클래스명을 따라간다.
     public void initBinder(WebDataBinder webDataBinder) {
@@ -47,7 +49,30 @@ public class AccountController {
 
         // TODO: 회원가입 처리
         return "redirect:/";
-
     } // signUpSubmit
+
+    @GetMapping("/check-email-token")
+    public String checkEmailToken(String token, String email, Model model) {
+        Account account = accountRepository.findByEmail(email); // 이메일 찾아오고
+        String view = "account/checked-email"; //
+        if (account == null) { // 조회되는 게 없을 때
+            model.addAttribute("error", "wrong email");
+            return view;
+        }
+
+        if (!account.getEmailCheckToken().equals(token)) { // 토큰과 맞지 않을 때
+            model.addAttribute("error", "wrong token");
+            return view;
+        }
+
+        account.setEmailVerified(true);
+        account.setJoinedAt(LocalDateTime.now());
+        
+        // 넘겨받는 폼에서 필요한 정보들  ~~번째 가입, ~~님
+        model.addAttribute("numberOfUser", accountRepository.count()); // 유저 수
+        model.addAttribute("nickname", account.getNickname()); // 닉네임
+        return view;
+
+    } // checkEmailToken
 
 }
