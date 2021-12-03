@@ -4,9 +4,16 @@ import com.studylecture.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,13 +23,15 @@ public class AccountService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void processNewAccount(SignUpForm signUpForm) { // 새로운 계정 처리 부분
+    public Account processNewAccount(SignUpForm signUpForm) { // 새로운 계정 처리 부분
         Account newAccount = saveNewAccount(signUpForm);
         // saveNewAccount 나온 후엔 해당 안됨
         // persist 상태 객체는 종료될때 db에 싱크를 하게 됨. Transactional
         // 토큰 만들어서 메시지에 담고 보내는 부분
         newAccount.generateEmailCheckToken(); // 저장
         sendSignUpConfirmEmail(newAccount);
+
+        return newAccount;
     } // processNewAccount
 
 
@@ -48,4 +57,16 @@ public class AccountService {
                 + "&email=" + newAccount.getEmail()); // 내용
         javaMailSender.send(mailMessage);
     } // sendSignUpConfirmEmail
+
+    public void login(Account account) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                account.getNickname(), account.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+
+//        UsernamePasswordAuthenticationToken token2 = new UsernamePasswordAuthenticationToken(account.getNickname(), account.getPassword());
+//        AuthenticationManager authenticationManager = authenticationManager.authenticate(token);
+// 원래는 이런식으로 주입받아서 써야하지만
+
+        SecurityContext context = SecurityContextHolder.getContext();
+             context.setAuthentication(token);
+    }
 }
