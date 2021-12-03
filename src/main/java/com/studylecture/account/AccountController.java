@@ -54,19 +54,20 @@ public class AccountController {
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model) {
         Account account = accountRepository.findByEmail(email); // 이메일 찾아오고
-        String view = "account/checked-email"; //
+//        String view = "account/checked-email"; // 공통되는 부분
+        String view = "account/checked-email";
         if (account == null) { // 조회되는 게 없을 때
-            model.addAttribute("error", "wrong email");
+            model.addAttribute("error", "wrong.email");
             return view;
         }
 
         if (!account.getEmailCheckToken().equals(token)) { // 토큰과 맞지 않을 때
-            model.addAttribute("error", "wrong token");
+            model.addAttribute("error", "wrong.token");
             return view;
         }
+        // 계정이 존재하고 토큰 인증이 완료된 후,
 
-        account.setEmailVerified(true);
-        account.setJoinedAt(LocalDateTime.now());
+      account.completeSignUp(); // verified true, joinedAt now
         
         // 넘겨받는 폼에서 필요한 정보들  ~~번째 가입, ~~님
         model.addAttribute("numberOfUser", accountRepository.count()); // 유저 수

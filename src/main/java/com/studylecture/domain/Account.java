@@ -50,4 +50,10 @@ public class Account {
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString(); // 랜덤값 만들어서 저장
     }
+
+    public void completeSignUp() {
+        setEmailVerified(true);
+        setJoinedAt(LocalDateTime.now());
+    }
+
 }
