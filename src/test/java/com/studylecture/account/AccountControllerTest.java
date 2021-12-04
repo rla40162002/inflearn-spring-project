@@ -72,7 +72,7 @@ class AccountControllerTest {
                 )
                 .andExpect(status().is3xxRedirection()) // 리다이렉션 응답
                 .andExpect(view().name("redirect:/"))
-                .andExpect(authenticated());
+                .andExpect(authenticated().withUsername("kyw"));
         ;
 
         Account account = accountRepository.findByEmail("rla4062002@naver.com");
@@ -116,6 +116,6 @@ class AccountControllerTest {
                 .andExpect(model().attributeExists("nickname"))
                 .andExpect(model().attributeExists("numberOfUser"))
                 .andExpect(view().name("account/checked-email"))
-                .andExpect(authenticated());
+                .andExpect(authenticated().withUsername("kyw"));
     }
 }

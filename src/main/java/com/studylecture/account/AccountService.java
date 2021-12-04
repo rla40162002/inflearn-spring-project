@@ -60,13 +60,15 @@ public class AccountService {
 
     public void login(Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                account.getNickname(), account.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+                account.getNickname(),
+                account.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
 //        UsernamePasswordAuthenticationToken token2 = new UsernamePasswordAuthenticationToken(account.getNickname(), account.getPassword());
 //        AuthenticationManager authenticationManager = authenticationManager.authenticate(token);
 // 원래는 이런식으로 주입받아서 써야하지만
 
         SecurityContext context = SecurityContextHolder.getContext();
-             context.setAuthentication(token);
+        context.setAuthentication(token);
     }
 }
