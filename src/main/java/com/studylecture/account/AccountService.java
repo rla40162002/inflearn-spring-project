@@ -49,7 +49,7 @@ public class AccountService {
         return newAccount;
     } // saveNewAccount
 
-    private void sendSignUpConfirmEmail(Account newAccount) { // 인증 메일 보내는 부분
+    public void sendSignUpConfirmEmail(Account newAccount) { // 인증 메일 보내는 부분
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail()); // 받는 사람
         mailMessage.setSubject("스터디 사이트 연습, 회원 가입 인증"); // 제목
