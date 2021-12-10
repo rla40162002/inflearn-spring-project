@@ -6,22 +6,18 @@
 <body class="bg-light">
 <div th:replace="fragments.html :: main-nav"></div>
 
-<div class="container">
-    <div class="py-5 text-center">
-        <h2>스터디연습</h2>
-    </div>
-</div>
-
-<div th:replace="fragments.html :: footer"></div>
-
 <div class="alert alert-warning" role="alert" th:if="${account != null && !account.emailVerified}">
     가입을 완료하려면 <a th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
 </div>
 
-<script type="application/javascript">
-    (function () {
-    }())
-</script>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>스터디연습</h2>
+    </div>
+
+    <div th:replace="fragments.html :: footer"></div>
+</div>
+
 
 </body>
 </html>

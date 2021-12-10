@@ -61,27 +61,6 @@
 
 <div th:replace="fragments.html :: footer"></div>
 
-<script type="application/javascript">
-    (function () {
-        'use strict';
-
-        window.addEventListener('load', function () {
-
-            var forms = document.getElementsByClassName('needs-validation');
-            // needs-validation을 클래스로 갖고 있는 폼 다 가져옴
-
-            Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() == false) { // submit 됐을 때 유효한지 검증.
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        }, false)
-
-    }())
-</script>
+<script th:replace="fragments.html :: form-validation"></script>
 </body>
 </html>

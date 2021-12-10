@@ -22,6 +22,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // get 만 허용
                 .anyRequest().authenticated();
                 // 나머지는 로그인 해야만 가능
+
+        http.formLogin()
+                .loginPage("/login").permitAll();
+        http.logout()
+                .logoutSuccessUrl("/");
+
     } // configure
 
     @Override
