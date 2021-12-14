@@ -57,6 +57,7 @@
                     <i class="fa fa-plus"></i> 스터디 개설
                 </a>
             </li>
+            <a class="nav-link btn btn-outline-primary" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
             <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
@@ -64,6 +65,7 @@
                          height="24"
                          class="rounded border bg-light"></svg>
                 </a>
+
                 <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
                     <h6 class="dropdown-header">
                         <span sec:authentication="name">Username</span>
@@ -76,6 +78,7 @@
                         <button class="dropdown-item" type="submit">로그아웃</button>
                     </form>
                 </div>
+
             </li>
         </ul>
     </div>

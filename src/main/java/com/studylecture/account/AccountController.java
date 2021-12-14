@@ -8,10 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -86,7 +83,7 @@ public class AccountController {
 
     @GetMapping("/resend-confirm-email")
     public String resendConfirmEmail(@CurrentUser Account account, Model model) {
-        if(!account.canSendConfirmEmail()){
+        if (!account.canSendConfirmEmail()) {
             model.addAttribute("error", "인증 이메일은 1시간에 한 번만 전송할 수 있습니다.");
             model.addAttribute("email", account.getEmail());
             return "account/check-email";
@@ -94,4 +91,16 @@ public class AccountController {
         accountService.sendSignUpConfirmEmail(account);
         return "redirect:/";
     } // resendConfirmEmail
+
+    @GetMapping("/profile/{nickname}")
+    public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Account account) {
+        Account byNickname = accountRepository.findByNickname(nickname);
+        if (byNickname == null) {
+            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
+        }
+        model.addAttribute(byNickname); // account 라는 키값으로 들어간다. 들어가는 타입의 camelCase 로 들어간다.
+        model.addAttribute("isOwner", byNickname.equals(account)); // 같은 객체면 owner
+        return "account/profile";
+    } // viewProfile
+
 }
