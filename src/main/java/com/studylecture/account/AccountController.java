@@ -65,8 +65,8 @@ public class AccountController {
         }
         // 계정이 존재하고 토큰 인증이 완료된 후,
 
-        account.completeSignUp(); // verified true, joinedAt now
-        accountService.login(account);
+        accountService.completeSignup(account);
+
         // 넘겨받는 폼에서 필요한 정보들  ~~번째 가입, ~~님
         model.addAttribute("numberOfUser", accountRepository.count()); // 유저 수
         model.addAttribute("nickname", account.getNickname()); // 닉네임
