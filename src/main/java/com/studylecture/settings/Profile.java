@@ -2,8 +2,10 @@ package com.studylecture.settings;
 
 import com.studylecture.domain.Account;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class Profile {
 
     private String bio;

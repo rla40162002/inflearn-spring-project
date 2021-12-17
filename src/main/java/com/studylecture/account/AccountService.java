@@ -1,6 +1,7 @@
 package com.studylecture.account;
 
 import com.studylecture.domain.Account;
+import com.studylecture.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -92,5 +93,16 @@ public class AccountService implements UserDetailsService {
     public void completeSignup(Account account) {
         account.completeSignUp(); // verified true, joinedAt now
         login(account);
+    }
+
+    public void updateProfile(Account account, Profile profile) {
+        account.setUrl(profile.getUrl());
+        account.setOccupation(profile.getOccupation());
+        account.setLocation(profile.getLocation());
+        account.setBio(profile.getBio());
+
+        // TODO 프로필 이미지
+        accountRepository.save(account);
+        // TODO 문제 하나 더
     }
 }
