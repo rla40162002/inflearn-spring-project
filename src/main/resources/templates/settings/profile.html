@@ -12,11 +12,18 @@
             <div th:replace="fragments.html :: settings-menu (currentMunu='profile')"></div>
         </div>
         <div class="col-8">
+            <div th:if="${message}" class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                <span th:text="${message}">메시지</span>
+                <span type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </span>
+            </div>
+
             <div class="row">
                 <h2 class="col-sm-12" th:text="${account.nickname}">kyw</h2>
             </div>
             <div class="row mt-3">
-                <form class="col-sm-6" action="#" th:action="@{/settings/profile.html}" th:object="${profile}"
+                <form class="col-sm-6" action="#" th:action="@{/settings/profile}" th:object="${profile}"
                       method="post" novalidate>
                     <div class="form-group">
                         <label for="bio">한줄소개</label>
@@ -53,7 +60,8 @@
 
                     <div class="form-group">
                         <label for="location">활동 지역</label>
-                        <input id="location" type="text" th:field="*{location}" class="form-control" placeholder="서울 강북구" aria-describedby="locationHelp" required>
+                        <input id="location" type="text" th:field="*{location}" class="form-control"
+                               placeholder="서울 강북구" aria-describedby="locationHelp" required>
 
                         <small id="locationHelp" class="form-text text-muted">
                             주요 활동(사는 곳이나 직장을 다니는 곳 또는 놀러 다니는 곳) 지역의 도시 이름을 알려주세요.
