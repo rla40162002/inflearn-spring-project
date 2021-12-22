@@ -29,11 +29,11 @@
                             <a th:href="@{/settings/keywords}">관심있는 주제</a>의 스터디가 만들어졌을 때</strong> 알림을 받을 방법을 설정하세요.
                     </div>
                     <div class="form-group">
-                        <div class="form-check form-switch">
+                        <div class="form-check form-check-inline form-switch">
                             <input type="checkbox" th:field="*{studyCreatedByEmail}" class="form-check-input" id="studyCreatedByEmail">
                             <label class="form-check-label" for="studyCreatedByEmail">이메일로 받기</label>
                         </div>
-                        <div class="form-check form-switch">
+                        <div class="form-check form-check-inline form-switch">
                             <input type="checkbox" th:field="*{studyCreatedByWeb}" class="form-check-input" id="studyCreatedByWeb">
                             <label class="form-check-label" for="studyCreatedByWeb">웹으로 받기</label>
                         </div>
@@ -42,11 +42,11 @@
                         <strong>스터디 모임 참가 신청</strong> 결과 알림을 받을 방법을 설정하세요.
                     </div>
                     <div class="form-group">
-                        <div class="form-check form-switch">
+                        <div class="form-check form-check-inline form-switch">
                             <input type="checkbox" th:field="*{studyJoinResultByEmail}" class="form-check-input" id="studyJoinResultByEmail">
                             <label class="form-check-label" for="studyJoinResultByEmail">이메일로 받기</label>
                         </div>
-                        <div class="form-check form-switch">
+                        <div class="form-check form-check-inline form-switch">
                             <input type="checkbox" th:field="*{studyJoinResultByWeb}" class="form-check-input" id="studyJoinResultByWeb">
                             <label class="form-check-label" for="studyJoinResultByWeb">웹으로 받기</label>
                         </div>
@@ -56,18 +56,18 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="form-check form-switch">
+                        <div class="form-check form-check-inline form-switch">
                             <input type="checkbox" th:field="*{studyUpdatedByEmail}" class="form-check-input" id="studyUpdatedByEmail">
                             <label class="form-check-label" for="studyUpdatedByEmail">이메일로 받기</label>
                         </div>
-                        <div class="form-check form-switch">
+                        <div class="form-check form-check-inline form-switch">
                             <input type="checkbox" th:field="*{studyUpdatedByWeb}" class="form-check-input" id="studyUpdatedByWeb">
                             <label class="form-check-label" for="studyUpdatedByWeb">웹으로 받기</label>
                         </div>
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="form-group mt-3">
                         <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">저장하기</button>
                     </div>
                 </form>
