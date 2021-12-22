@@ -74,13 +74,13 @@ public class AccountService implements UserDetailsService {
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token);
-    }
+    } // login
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrNickname); // 이메일 먼저 던져보고
-        if (account == null) { // null인 경우엔 닉네임 조회
+        if (account == null) { // null 인 경우엔 닉네임 조회
             account = accountRepository.findByNickname(emailOrNickname);
         }
 
@@ -88,12 +88,12 @@ public class AccountService implements UserDetailsService {
             throw new UsernameNotFoundException(emailOrNickname);
         }
         return new UserAccount(account); // principle
-    }
+    } // loadUserByUsername
 
     public void completeSignup(Account account) {
         account.completeSignUp(); // verified true, joinedAt now
         login(account);
-    }
+    } // completeSignup
 
     public void updateProfile(Account account, Profile profile) {
         account.setUrl(profile.getUrl());
@@ -103,5 +103,10 @@ public class AccountService implements UserDetailsService {
         account.setProfileImage(profile.getProfileImage());
 
         accountRepository.save(account);
-    }
+    } // updateProfile
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword)); // 현재 객체는 detached 상태의 객체다. persist x
+        accountRepository.save(account); // 명시적으로 merge 해줘야 함.
+    } // updatePassword
 }
