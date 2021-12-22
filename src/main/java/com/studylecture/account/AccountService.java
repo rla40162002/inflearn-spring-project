@@ -1,6 +1,7 @@
 package com.studylecture.account;
 
 import com.studylecture.domain.Account;
+import com.studylecture.settings.Notifications;
 import com.studylecture.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -109,4 +110,15 @@ public class AccountService implements UserDetailsService {
         account.setPassword(passwordEncoder.encode(newPassword)); // 현재 객체는 detached 상태의 객체다. persist x
         accountRepository.save(account); // 명시적으로 merge 해줘야 함.
     } // updatePassword
+
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+        account.setStudyJoinResultByEmail(notifications.isStudyJoinResultByEmail());
+        account.setStudyJoinResultByWeb(notifications.isStudyJoinResultByWeb());
+        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+
+        accountRepository.save(account);
+    } // updateNotifications
 }

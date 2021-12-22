@@ -40,13 +40,13 @@ public class Account {
 
     private boolean studyCreatedByEmail; // 스터디 만들어진 거 이메일로 받기 여부
 
-    private boolean studyCreatedByWeb; // 웹으로 받기 여부
+    private boolean studyCreatedByWeb = true; // 웹으로 받기 여부
 
     private boolean studyJoinResultByEmail; // 스터디 가입신청 결과 이메일로 받기 여부
-    private boolean studyJoinResultByWeb; // 웹으로 받기 여부
+    private boolean studyJoinResultByWeb = true; // 웹으로 받기 여부
 
     private boolean studyUpdatedByEmail; // 스터디 갱신 이메일 여부
-    private boolean studyUpdatedByWeb; // 스터디 갱신 웹 여부
+    private boolean studyUpdatedByWeb = true; // 스터디 갱신 웹 여부
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString(); // 랜덤값 만들어서 저장
