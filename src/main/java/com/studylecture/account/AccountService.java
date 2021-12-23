@@ -1,13 +1,13 @@
 package com.studylecture.account;
 
 import com.studylecture.domain.Account;
-import com.studylecture.settings.Notifications;
-import com.studylecture.settings.Profile;
+import com.studylecture.settings.form.Notifications;
+import com.studylecture.settings.form.Profile;
+import com.studylecture.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

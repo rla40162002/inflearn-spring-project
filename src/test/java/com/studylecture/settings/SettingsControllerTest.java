@@ -2,9 +2,7 @@ package com.studylecture.settings;
 
 import com.studylecture.WithAccount;
 import com.studylecture.account.AccountRepository;
-import com.studylecture.account.AccountService;
 import com.studylecture.domain.Account;
-import lombok.With;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

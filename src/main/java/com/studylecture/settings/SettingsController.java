@@ -3,6 +3,10 @@ package com.studylecture.settings;
 import com.studylecture.account.AccountService;
 import com.studylecture.account.CurrentUser;
 import com.studylecture.domain.Account;
+import com.studylecture.settings.form.Notifications;
+import com.studylecture.settings.form.PasswordForm;
+import com.studylecture.settings.form.Profile;
+import com.studylecture.settings.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -27,13 +31,13 @@ public class SettingsController {
     }
 
     static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    static final String SETTINGS_PROFILE_URL = "/settings/profile";
+    static final String SETTINGS_PROFILE_URL = "/" + SETTINGS_PROFILE_VIEW_NAME;
 
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/" + SETTINGS_PASSWORD_VIEW_NAME;
 
     static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
-    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/" + SETTINGS_NOTIFICATIONS_VIEW_NAME;
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;

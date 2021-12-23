@@ -1,7 +1,7 @@
 package com.studylecture;
 
 import com.studylecture.account.AccountService;
-import com.studylecture.account.SignUpForm;
+import com.studylecture.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

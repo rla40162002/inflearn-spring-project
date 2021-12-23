@@ -1,5 +1,7 @@
-package com.studylecture.account;
+package com.studylecture.account.validator;
 
+import com.studylecture.account.AccountRepository;
+import com.studylecture.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
