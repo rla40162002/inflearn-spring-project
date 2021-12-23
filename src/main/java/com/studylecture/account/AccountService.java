@@ -4,6 +4,7 @@ import com.studylecture.domain.Account;
 import com.studylecture.settings.Notifications;
 import com.studylecture.settings.Profile;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
-
+    private final ModelMapper modelMapper;
     public Account processNewAccount(SignUpForm signUpForm) { // 새로운 계정 처리 부분
         Account newAccount = saveNewAccount(signUpForm);
         // saveNewAccount 나온 후엔 해당 안됨
@@ -97,12 +98,7 @@ public class AccountService implements UserDetailsService {
     } // completeSignup
 
     public void updateProfile(Account account, Profile profile) {
-        account.setUrl(profile.getUrl());
-        account.setOccupation(profile.getOccupation());
-        account.setLocation(profile.getLocation());
-        account.setBio(profile.getBio());
-        account.setProfileImage(profile.getProfileImage());
-
+        modelMapper.map(profile, account); // profile을 account에 저장한다 라는 의미
         accountRepository.save(account);
     } // updateProfile
 
@@ -112,13 +108,7 @@ public class AccountService implements UserDetailsService {
     } // updatePassword
 
     public void updateNotifications(Account account, Notifications notifications) {
-        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
-        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
-        account.setStudyJoinResultByEmail(notifications.isStudyJoinResultByEmail());
-        account.setStudyJoinResultByWeb(notifications.isStudyJoinResultByWeb());
-        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
-        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
-
+        modelMapper.map(notifications, account);
         accountRepository.save(account);
     } // updateNotifications
 }
