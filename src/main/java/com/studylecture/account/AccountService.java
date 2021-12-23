@@ -111,4 +111,10 @@ public class AccountService implements UserDetailsService {
         modelMapper.map(notifications, account);
         accountRepository.save(account);
     } // updateNotifications
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        login(account); // 이걸 안하면 네비게이션바에 있는 정보가 바뀌지 않는다.
+    } // updateNickname
 }
