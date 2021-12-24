@@ -53,7 +53,6 @@ public class SettingsController {
     static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
 
 
-
     @GetMapping(SETTINGS_PROFILE_URL)
     public String updateProfileForm(@CurrentUser Account account, Model model) {
 
@@ -129,8 +128,8 @@ public class SettingsController {
     } // updateAccountForm
 
     @PostMapping(SETTINGS_ACCOUNT_URL)
-    public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Model model,
-                                RedirectAttributes attributes, Errors errors) {
+    public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm, Errors errors,
+                                Model model, RedirectAttributes attributes) {
 
         if (errors.hasErrors()) {
             model.addAttribute(account);

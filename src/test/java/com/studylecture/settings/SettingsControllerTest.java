@@ -161,7 +161,7 @@ class SettingsControllerTest {
         mockMvc.perform(post(SettingsController.SETTINGS_ACCOUNT_URL)
                         .param("nickname", newNickname)
                         .with(csrf()))
-                .andExpect(status().isOk()) // TODO why 400?
+                .andExpect(status().isOk()) // TODO why 400? => @Valid 후 매개변수 순서.. valid할 폼과 error
                 .andExpect(view().name(SettingsController.SETTINGS_ACCOUNT_VIEW_NAME))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeExists("account"))
