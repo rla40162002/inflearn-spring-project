@@ -29,6 +29,7 @@ public class AccountService implements UserDetailsService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+
     public Account processNewAccount(SignUpForm signUpForm) { // 새로운 계정 처리 부분
         Account newAccount = saveNewAccount(signUpForm);
         // saveNewAccount 나온 후엔 해당 안됨
@@ -89,7 +90,7 @@ public class AccountService implements UserDetailsService {
         if (account == null) {
             throw new UsernameNotFoundException(emailOrNickname);
         }
-        return new UserAccount(account); // principle
+        return new UserAccount(account); // principal
     } // loadUserByUsername
 
     public void completeSignup(Account account) {
@@ -117,4 +118,15 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
         login(account); // 이걸 안하면 네비게이션바에 있는 정보가 바뀌지 않는다.
     } // updateNickname
+
+    public void sendLoginLink(Account account) { // 이메일로 로그인하는 메일 발송
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        System.out.println("check sendLoginLink method");
+        account.generateEmailCheckToken(); // 이메일로그인 토큰 새로 생성
+        mailMessage.setTo(account.getEmail()); // 받는 사람
+        mailMessage.setSubject("스터디 사이트, 로그인 링크"); // 제목
+        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken()
+                + "&email=" + account.getEmail()); // 내용
+        javaMailSender.send(mailMessage);
+    } // sendLoginLink
 }

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -102,4 +103,43 @@ public class AccountController {
         return "account/profile";
     } // viewProfile
 
+    @GetMapping("/email-login")
+    public String emailLoginForm() {
+        return "account/email-login";
+    } // emailLoginForm
+
+    @PostMapping("/email-login")
+    public String sendEmailLoginLink(String email, Model model, RedirectAttributes attributes) {
+
+        Account account = accountRepository.findByEmail(email);
+
+        if (account == null) { // 이메일이 존재하지 않으면
+            model.addAttribute("error", "유효한 이메일 주소가 아닙니다.");
+            return "account/email-login";
+        }
+
+        if (!account.canSendConfirmEmail()) { // 1시간이 지나기 전에 다시 요청하면
+            model.addAttribute("error", "이메일 로그인 발송 요청은 1시간에 한 번만 가능합니다.");
+            return "account/email-login";
+        }
+
+        accountService.sendLoginLink(account);
+        attributes.addFlashAttribute("message", "이메일 로그인 메일을 발송했습니다.");
+        return "redirect:/email-login";
+    } // sendEmailLoginLink
+
+    @GetMapping("/login-by-email")
+    public String loginByEmail(String token, String email, Model model) {
+        Account account = accountRepository.findByEmail(email);
+        String view = "account/logged-in-by-email";
+
+        if (account == null || !token.equals(account.getEmailCheckToken())) {
+            // 이메일이 존재하지 않거나, 토큰이 일치하지 않으면
+            model.addAttribute("error", "로그인할 수 없습니다.");
+            return view;
+        } // if
+
+        accountService.login(account);
+        return view;
+    } // loginByEmail
 }

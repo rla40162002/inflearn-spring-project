@@ -65,5 +65,6 @@ public class Account {
     public boolean canSendConfirmEmail() {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
         // 1시간이 안 지났으면 false
+//        return true;
     }
 }
