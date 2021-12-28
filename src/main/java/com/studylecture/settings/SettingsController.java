@@ -9,6 +9,7 @@ import com.studylecture.settings.form.PasswordForm;
 import com.studylecture.settings.form.Profile;
 import com.studylecture.settings.validator.NicknameValidator;
 import com.studylecture.settings.validator.PasswordFormValidator;
+import com.studylecture.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ public class SettingsController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
+    private final TagRepository tagRepository;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -51,6 +53,9 @@ public class SettingsController {
 
     static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
     static final String SETTINGS_ACCOUNT_URL = "/" + SETTINGS_ACCOUNT_VIEW_NAME;
+
+    static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
+    static final String SETTINGS_TAGS_URL = "/" + SETTINGS_TAGS_VIEW_NAME;
 
 
     @GetMapping(SETTINGS_PROFILE_URL)
@@ -141,4 +146,11 @@ public class SettingsController {
 
         return "redirect:" + SETTINGS_ACCOUNT_URL;
     } // updateAccount
+
+
+    @GetMapping(SETTINGS_TAGS_URL)
+    public String updateTags(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        return SETTINGS_TAGS_VIEW_NAME;
+    } // updateTags
 }
