@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -47,6 +48,10 @@ public class Account {
 
     private boolean studyUpdatedByEmail; // 스터디 갱신 이메일 여부
     private boolean studyUpdatedByWeb = true; // 스터디 갱신 웹 여부
+
+    @ManyToMany
+    private Set<Tag> tags;
+
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString(); // 랜덤값 만들어서 저장
