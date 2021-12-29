@@ -1,6 +1,7 @@
 package com.studylecture.account;
 
 import com.studylecture.domain.Account;
+import com.studylecture.domain.Tag;
 import com.studylecture.settings.form.Notifications;
 import com.studylecture.settings.form.Profile;
 import com.studylecture.account.form.SignUpForm;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -129,4 +131,9 @@ public class AccountService implements UserDetailsService {
                 + "&email=" + account.getEmail()); // 내용
         javaMailSender.send(mailMessage);
     } // sendLoginLink
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tag));
+    } // addTag
 }

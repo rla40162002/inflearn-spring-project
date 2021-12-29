@@ -1,2 +1,10 @@
-package com.studylecture.settings.form;public class TagForm {
+package com.studylecture.settings.form;
+
+import lombok.Data;
+
+@Data
+public class TagForm {
+
+    private String tagTitle;
+
 }

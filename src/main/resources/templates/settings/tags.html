@@ -27,7 +27,14 @@
 </div>
 <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
 <script type="application/javascript" th:inline="javascript">
+    $(function () {
+        const csrfToken = /*[[${_csrf.token}]]*/ null;
+        const csrfHeader = /*[[${_csrf.headerName}]]*/ null;
 
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+    });
 </script>
 <script type="application/javascript">
     $(function () {
@@ -55,9 +62,9 @@
             tagRequest("/remove", e.detail.data.value);
         }
 
-        var input = document.querySelector('#tags');
+        const input = document.querySelector('#tags');
 
-        var tagify = new Tagify(input, {
+        const tagify = new Tagify(input, {
             pattern: /^.{0,20}$/,
             dropdown: {
                 enabled: 1, //

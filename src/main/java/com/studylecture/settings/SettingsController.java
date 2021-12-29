@@ -3,23 +3,19 @@ package com.studylecture.settings;
 import com.studylecture.account.AccountService;
 import com.studylecture.account.CurrentUser;
 import com.studylecture.domain.Account;
-import com.studylecture.settings.form.NicknameForm;
-import com.studylecture.settings.form.Notifications;
-import com.studylecture.settings.form.PasswordForm;
-import com.studylecture.settings.form.Profile;
+import com.studylecture.domain.Tag;
+import com.studylecture.settings.form.*;
 import com.studylecture.settings.validator.NicknameValidator;
 import com.studylecture.settings.validator.PasswordFormValidator;
 import com.studylecture.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -147,10 +143,28 @@ public class SettingsController {
         return "redirect:" + SETTINGS_ACCOUNT_URL;
     } // updateAccount
 
-
     @GetMapping(SETTINGS_TAGS_URL)
     public String updateTags(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         return SETTINGS_TAGS_VIEW_NAME;
     } // updateTags
+
+    @PostMapping("/settings/tags/add")
+    @ResponseBody
+    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm, Model model) {
+        String title = tagForm.getTagTitle();
+
+        Tag tag = tagRepository.findByTitle(title);
+        // Optional 로 바꾼 후
+        // Tag tag =   tagRepository.findByTitle(title).orElseGet(() -> tagRepository.save(Tag.builder()
+        //                      .title(tagForm.getTagTitle())
+        //                      .build())); // findByTitle 쪽도 return 값을 Optional 로 바꿔야함.
+        if (tag == null) {
+            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build()); // tagForm
+        }
+
+        accountService.addTag(account, tag);
+
+        return ResponseEntity.ok().build();
+    } // addTag
 }
