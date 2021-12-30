@@ -153,7 +153,7 @@ public class SettingsController {
         return SETTINGS_TAGS_VIEW_NAME;
     } // updateTags
 
-    @PostMapping("/settings/tags/add")
+    @PostMapping(SETTINGS_TAGS_URL + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm, Model model) {
         String title = tagForm.getTagTitle();
@@ -164,11 +164,25 @@ public class SettingsController {
         //                      .title(tagForm.getTagTitle())
         //                      .build())); // findByTitle 쪽도 return 값을 Optional 로 바꿔야함.
         if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build()); // tagForm
+            tag = tagRepository.save(Tag.builder().title(title).build()); // tagForm
         }
 
         accountService.addTag(account, tag);
 
         return ResponseEntity.ok().build();
     } // addTag
+
+    @PostMapping(SETTINGS_TAGS_URL + "/remove")
+    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(title);
+
+        if (tag == null) { // 없는 태그를 삭제하려고 할 때(보내온 요청 자체가 잘못된 것)
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.removeTag(account, tag);
+
+        return ResponseEntity.ok().build();
+    } // removeTag
 }
