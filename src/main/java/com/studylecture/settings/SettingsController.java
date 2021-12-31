@@ -6,10 +6,12 @@ import com.studylecture.account.AccountService;
 import com.studylecture.account.CurrentAccount;
 import com.studylecture.domain.Account;
 import com.studylecture.domain.Tag;
+import com.studylecture.domain.Zone;
 import com.studylecture.settings.form.*;
 import com.studylecture.settings.validator.NicknameValidator;
 import com.studylecture.settings.validator.PasswordFormValidator;
 import com.studylecture.tag.TagRepository;
+import com.studylecture.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +27,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.studylecture.settings.SettingsController.ROOT;
+import static com.studylecture.settings.SettingsController.SETTINGS;
+
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/settings")
+@RequestMapping(ROOT + SETTINGS)
 public class SettingsController {
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
+    private final ZoneRepository zoneRepository;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -52,6 +58,7 @@ public class SettingsController {
     static final String NOTIFICATIONS = "/notifications";
     static final String ACCOUNT = "/account";
     static final String TAGS = "/tags";
+    static final String ZONES = "/zones";
 
     @GetMapping(PROFILE)
     public String updateProfileForm(@CurrentAccount Account account, Model model) {
@@ -155,7 +162,7 @@ public class SettingsController {
 
     @PostMapping(TAGS + "/add")
     @ResponseBody
-    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm, Model model) {
+    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
         String title = tagForm.getTagTitle();
 
         Tag tag = tagRepository.findByTitle(title);
@@ -185,4 +192,45 @@ public class SettingsController {
 
         return ResponseEntity.ok().build();
     } // removeTag
+
+    @GetMapping(ZONES)
+    public String updateZonesForm(@CurrentAccount Account account, Model model) throws JsonProcessingException {
+
+        Set<Zone> zones = accountService.getZones(account);
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
+
+        model.addAttribute(account);
+        model.addAttribute("zones", zones.stream().map(Zone::toString).collect(Collectors.toList()));
+        model.addAttribute("whitelist", objectMapper.writeValueAsString(allZones));
+
+        return SETTINGS + ZONES;
+    } // updateZoneForm
+
+    @PostMapping(ZONES + "/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.addZone(account, zone);
+
+        return ResponseEntity.ok().build();
+    } // addZone
+
+    @PostMapping(ZONES + "/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentAccount Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(), zoneForm.getProvinceName());
+
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        accountService.removeZone(account, zone);
+        return ResponseEntity.ok().build();
+    } // removeZone
+
 }

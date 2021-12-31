@@ -2,6 +2,7 @@ package com.studylecture.account;
 
 import com.studylecture.domain.Account;
 import com.studylecture.domain.Tag;
+import com.studylecture.domain.Zone;
 import com.studylecture.settings.form.Notifications;
 import com.studylecture.settings.form.Profile;
 import com.studylecture.account.form.SignUpForm;
@@ -140,4 +141,20 @@ public class AccountService implements UserDetailsService {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getTags().remove(tag));
     } // removeTag
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+    } // getZones
+
+    public void addZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().add(zone));
+    } // addZone
+
+    public void removeZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getZones().remove(zone));
+    } // removeZone
+
 }

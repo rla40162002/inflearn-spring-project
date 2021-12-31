@@ -2,10 +2,7 @@ package com.studylecture.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -14,6 +11,7 @@ import javax.persistence.Id;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"city", "province"}))
 public class Zone {
     @Id
     @GeneratedValue
@@ -27,4 +25,9 @@ public class Zone {
 
     @Column(nullable = true) // 서울 같은 곳은 도에 속해 있지 않다.
     private String province; // 도
+
+    @Override
+    public String toString() {
+        return String.format("%s(%s)/%s", city, localNameOfCity, province);
+    }
 }
