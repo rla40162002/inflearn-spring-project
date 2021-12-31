@@ -38,7 +38,6 @@ public class AccountService implements UserDetailsService {
         // saveNewAccount 나온 후엔 해당 안됨
         // persist 상태 객체는 종료될때 db에 싱크를 하게 됨. Transactional
         // 토큰 만들어서 메시지에 담고 보내는 부분
-        newAccount.generateEmailCheckToken(); // 저장
         sendSignUpConfirmEmail(newAccount);
 
         return newAccount;
@@ -46,17 +45,11 @@ public class AccountService implements UserDetailsService {
 
 
     private Account saveNewAccount(SignUpForm signUpForm) { // 계정 저장하는 부분
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword()))   //TODO encoding 해야함
-                .studyCreatedByWeb(true)
-                .studyUpdatedByWeb(true)
-                .studyJoinResultByWeb(true) // web 알림만 켜두기
-                .build();
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class); // 생성자로 만들면서 기본값이 적용이 된다.
+        account.generateEmailCheckToken(); // 토큰 생성
 
-        Account newAccount = accountRepository.save(account);
-        return newAccount;
+        return accountRepository.save(account);
     } // saveNewAccount
 
     public void sendSignUpConfirmEmail(Account newAccount) { // 인증 메일 보내는 부분
