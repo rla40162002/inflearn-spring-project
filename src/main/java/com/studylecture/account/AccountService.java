@@ -7,6 +7,7 @@ import com.studylecture.settings.form.Notifications;
 import com.studylecture.settings.form.Profile;
 import com.studylecture.account.form.SignUpForm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,6 +29,7 @@ import java.util.Set;
 @Transactional
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
@@ -59,6 +61,7 @@ public class AccountService implements UserDetailsService {
         mailMessage.setSubject("스터디 사이트 연습, 회원 가입 인증"); // 제목
         mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken()
                 + "&email=" + newAccount.getEmail()); // 내용
+        log.info(mailMessage.getText());
         javaMailSender.send(mailMessage);
     } // sendSignUpConfirmEmail
 
