@@ -3,6 +3,8 @@ package com.studylecture.account;
 import com.studylecture.domain.Account;
 import com.studylecture.domain.Tag;
 import com.studylecture.domain.Zone;
+import com.studylecture.mail.EmailMessage;
+import com.studylecture.mail.EmailService;
 import com.studylecture.settings.form.Notifications;
 import com.studylecture.settings.form.Profile;
 import com.studylecture.account.form.SignUpForm;
@@ -32,7 +34,7 @@ import java.util.Set;
 @Slf4j
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
@@ -56,13 +58,12 @@ public class AccountService implements UserDetailsService {
     } // saveNewAccount
 
     public void sendSignUpConfirmEmail(Account newAccount) { // 인증 메일 보내는 부분
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail()); // 받는 사람
-        mailMessage.setSubject("스터디 사이트 연습, 회원 가입 인증"); // 제목
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken()
-                + "&email=" + newAccount.getEmail()); // 내용
-        log.info(mailMessage.getText());
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("스터디 관리 사이트 회원 가입 인증 메일")
+                .message("/check-email-token?token=" + newAccount.getEmailCheckToken()
+                        + "&email=" + newAccount.getEmail()).build();
+        emailService.sendEmail(emailMessage);
     } // sendSignUpConfirmEmail
 
     public void login(Account account) {
@@ -120,14 +121,12 @@ public class AccountService implements UserDetailsService {
     } // updateNickname
 
     public void sendLoginLink(Account account) { // 이메일로 로그인하는 메일 발송
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        System.out.println("check sendLoginLink method");
-        account.generateEmailCheckToken(); // 이메일로그인 토큰 새로 생성
-        mailMessage.setTo(account.getEmail()); // 받는 사람
-        mailMessage.setSubject("스터디 사이트, 로그인 링크"); // 제목
-        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken()
-                + "&email=" + account.getEmail()); // 내용
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("스터디 관리 사이트 로그인 링크")
+                .message("/login-by-email?token=" + account.getEmailCheckToken()
+                        + "&email=" + account.getEmail()).build();
+        emailService.sendEmail(emailMessage);
     } // sendLoginLink
 
     public void addTag(Account account, Tag tag) {

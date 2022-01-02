@@ -1,6 +1,8 @@
 package com.studylecture.account;
 
 import com.studylecture.domain.Account;
+import com.studylecture.mail.EmailMessage;
+import com.studylecture.mail.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ class AccountControllerTest {
     private AccountRepository accountRepository;
 
     @MockBean
-    JavaMailSender javaMailSender;
+    EmailService emailService;
 
     @Test
     @DisplayName("회원가입 화면 보이는지 테스트")
@@ -82,7 +84,7 @@ class AccountControllerTest {
         assertNotEquals(account.getPassword(), "12345678");
         assertNotNull(account.getEmailCheckToken());
         assertTrue(accountRepository.existsByEmail("rla4062002@naver.com")); // 이메일 중복여부
-        then(javaMailSender).should().send(any(SimpleMailMessage.class)); // SimpleMailMessage타입의 아무거나라도 들어왔는가 확인
+        then(emailService).should().sendEmail(any(EmailMessage.class));// EmailMessage 타입의 아무거나라도 들어왔는가 확인
     }
 
     @Test
