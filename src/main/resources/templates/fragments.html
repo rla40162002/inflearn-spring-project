@@ -23,7 +23,19 @@
             padding: 0;
             margin: 0;
         }
+        #study-logo {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
 
+        #study-logo img {
+            height: auto;
+            width: 100%;
+            overflow: hidden;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
@@ -291,8 +303,8 @@
 <div th:fragment="study-settings-menu (currentMenu)" class="list-group">
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'description'}? active"
        th:href="@{'/study/'+${study.path} + '/settings/description'}">소개</a>
-    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'image'}? active"
-       th:href="@{'/study/'+${study.path} + '/settings/image'}">배너 이미지</a>
+    <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'banner'}? active"
+       th:href="@{'/study/'+${study.path} + '/settings/banner'}">배너 이미지</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'tags'}? active"
        th:href="@{'/study/'+${study.path} + '/settings/tags'}">스터디 주제</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active"
@@ -322,5 +334,9 @@
         <span aria-hidden="true">&times;</span>
     </span>
 </div>
-
+<script type="application/javascript" th:fragment="tooltip">
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip()
+    })
+</script>
 </html>

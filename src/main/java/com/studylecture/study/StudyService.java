@@ -38,11 +38,24 @@ public class StudyService {
         if (!account.isManagerOf(study)) { // 관리자가 아니면
             throw new AccessDeniedException("해당 기능을 사용할 권한이 없습니다.");
         }
-        
+
         return study;
     }
 
     public void updateStudyDescription(Study study, StudyDescriptionForm studyDescriptionForm) {
         modelMapper.map(studyDescriptionForm, study);
     } // updateStudyDescription
+
+    public void updateStudyImage(Study study, String image) {
+        study.setImage(image);
+    } // updateStudyImage
+
+    public void enableStudyBanner(Study study) {
+        study.setUseBanner(true);
+    } // enableStudyBanner
+
+    public void disableStudyBanner(Study study) {
+        study.setUseBanner(false);
+    } // disableStudyBanner
+
 }
