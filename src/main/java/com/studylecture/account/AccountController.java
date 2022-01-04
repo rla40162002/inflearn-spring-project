@@ -94,12 +94,10 @@ public class AccountController {
 
     @GetMapping("/profile/{nickname}")
     public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account) {
-        Account byNickname = accountRepository.findByNickname(nickname);
-        if (byNickname == null) {
-            throw new IllegalArgumentException(nickname + "에 해당하는 사용자가 없습니다.");
-        }
-        model.addAttribute(byNickname); // account 라는 키값으로 들어간다. 들어가는 타입의 camelCase 로 들어간다.
-        model.addAttribute("isOwner", byNickname.equals(account)); // 같은 객체면 owner
+        Account account1 = accountService.getAccount(nickname);
+
+        model.addAttribute(account1); // account 라는 키값으로 들어간다. 들어가는 타입의 camelCase 로 들어간다.
+        model.addAttribute("isOwner", account1.equals(account)); // 같은 객체면 owner
         return "account/profile";
     } // viewProfile
 
