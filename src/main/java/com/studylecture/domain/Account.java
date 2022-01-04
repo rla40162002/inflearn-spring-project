@@ -75,4 +75,8 @@ public class Account {
         // 1시간이 안 지났으면 false
 //        return true;
     }
+
+    public boolean isManagerOf(Study study) {
+        return study.getManagers().contains(this);
+    } // isManagerOf
 }
