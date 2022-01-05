@@ -228,7 +228,7 @@
             <span sec:authorize="isAuthenticated()"
                   th:if="${study.published && !study.closed && study.isManager(#authentication.principal)}">
                 <a class="btn btn-outline-primary" th:href="@{'/study/' + ${study.path} + '/new-event'}">
-                    모임 만들기
+                    <i class="fa fa-plus"></i> 모임 만들기
                 </a>
             </span>
         </div>

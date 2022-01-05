@@ -19,6 +19,8 @@ import java.util.Set;
 @NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
         @NamedAttributeNode("zones"),
         @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
+        @NamedAttributeNode("managers")})
 @Entity
 @Getter
 @Setter
@@ -98,4 +100,47 @@ public class Study {
     public String getImage() {
         return image != null ? image : "/images/default_banner.png";
     }
+
+    public void publish() {
+        if (!this.closed && !this.published) { // 스터디가 공개되지 않은 상태이고 종료가 되지 않은 상태
+            this.published = true;
+            this.publishedDateTime = LocalDateTime.now();
+        } else {
+            throw new RuntimeException("스터디를 공개할 수 없는 상태입니다. 스터디를 이미 공개했거나 종료했습니다.");
+        }
+    } // publish
+
+    public void close() {
+        if (!this.closed && this.published) { // 스터디가 공개된 상태이고, 종료되지 않은 상태
+            this.closed = true;
+            this.closedDateTime = LocalDateTime.now();
+        } else {
+            throw new RuntimeException("스터디를 종료할 수 없습니다. 스터디를 공개하지 않았거나 이미 종료한 스터디입니다.");
+        }
+    } // close
+
+    public void startRecruit() {
+        if (canUpdateRecruiting()) { // 스터디가 공개된 상태이고, 종료되지 않은 상태
+            this.recruiting = true;
+            this.recruitingUpdateDateTime = LocalDateTime.now();
+        } else {
+            throw new RuntimeException("인원 모집을 시작할 수 없습니다. 스터디를 공개하거나 한 시간 뒤 다시 시도하세요.");
+        }
+    } // startRecruit
+
+    public void stopRecruit() {
+        if (canUpdateRecruiting()) { // 스터디가 공개된 상태이고, 종료되지 않은 상태
+            this.recruiting = false;
+            this.recruitingUpdateDateTime = LocalDateTime.now();
+        } else {
+            throw new RuntimeException("인원 모집을 중단할 수 없습니다. 스터디를 공개하거나 한 시간 뒤 다시 시도하세요.");
+        }
+    } // stopRecruit
+
+
+    public boolean canUpdateRecruiting() {
+        return this.published && this.recruitingUpdateDateTime == null
+                || this.recruitingUpdateDateTime.isBefore(LocalDateTime.now().minusHours(1));
+    } // canUpdateRecruiting
+
 }
