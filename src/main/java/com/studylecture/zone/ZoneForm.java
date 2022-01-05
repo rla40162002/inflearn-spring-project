@@ -1,4 +1,4 @@
-package com.studylecture.settings.form;
+package com.studylecture.zone;
 
 import com.studylecture.domain.Zone;
 import lombok.Data;

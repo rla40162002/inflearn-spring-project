@@ -23,6 +23,7 @@
             padding: 0;
             margin: 0;
         }
+
         #study-logo {
             height: 200px;
             width: 100%;
@@ -36,6 +37,7 @@
             width: 100%;
             overflow: hidden;
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         }
@@ -241,14 +243,14 @@
         <div class="col-10">
             <p>
                 <span th:each="tag: ${study.tags}"
-                      class="font-weight-light text-monospace badge badge-pill badge-info mr-3">
+                      class="font-weight-light text-monospace badge rounded-pill bg-success">
                     <a th:href="@{'/search/tag/' + ${tag.title}}" class="text-decoration-none text-white">
                         <i class="fa fa-tag"></i> <span th:text="${tag.title}">Tag</span>
                     </a>
                 </span>
 
                 <span th:each="zone: ${study.zones}"
-                      class="font-weight-light text-monospace badge badge-primary mr-3">
+                      class="font-weight-light text-monospace badge bg-primary">
                     <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">
                         <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}">City</span>
                     </a>
@@ -309,7 +311,8 @@
        th:href="@{'/study/'+${study.path} + '/settings/tags'}">스터디 주제</a>
     <a class="list-group-item list-group-item-action" th:classappend="${currentMenu == 'zones'}? active"
        th:href="@{'/study/'+${study.path} + '/settings/zones'}">활동 지역</a>
-    <a class="list-group-item list-group-item-action list-group-item-danger" th:classappend="${currentMunu == 'study'}? active"
+    <a class="list-group-item list-group-item-action list-group-item-danger"
+       th:classappend="${currentMunu == 'study'}? active"
        th:href="@{'/study/'+${study.path} + '/settings/study'}">스터디</a>
 </div>
 
@@ -339,4 +342,103 @@
         $('[data-bs-toggle="tooltip"]').tooltip()
     })
 </script>
+
+<div th:fragment="update-tags (baseUrl)">
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript" th:inline="javascript">
+        $(function () {
+            function tagRequest(url, tagTitle) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "[(${baseUrl})]" + url,
+                    data: JSON.stringify({'tagTitle': tagTitle})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            const input = document.querySelector('#tags');
+
+            const tagify = new Tagify(input, {
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+                pattern: /^.{0,20}$/,
+                dropdown: {
+                    enabled: 1, //
+                }
+            });
+
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+
+            tagify.DOM.input.classList.add('form-control');
+
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+
+        });
+    </script>
+</div>
+
+<div th:fragment="update-zones (baseUrl)">
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript">
+        $(function () {
+            function tagRequest(url, zoneName) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "[(${baseUrl})]" + url,
+                    data: JSON.stringify({'zoneName': zoneName})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            const input = document.querySelector('#zones');
+
+            const tagify = new Tagify(input, {
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+                pattern: /^.{0,20}$/,
+                dropdown: {
+                    enabled: 1, //
+                }
+            });
+
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+
+            tagify.DOM.input.classList.add('form-control');
+
+            tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+
+        });
+    </script>
+</div>
+
 </html>

@@ -10,7 +10,10 @@ import com.studylecture.domain.Zone;
 import com.studylecture.settings.form.*;
 import com.studylecture.settings.validator.NicknameValidator;
 import com.studylecture.settings.validator.PasswordFormValidator;
+import com.studylecture.tag.TagForm;
 import com.studylecture.tag.TagRepository;
+import com.studylecture.tag.TagService;
+import com.studylecture.zone.ZoneForm;
 import com.studylecture.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -40,6 +43,7 @@ public class SettingsController {
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
+    private final TagService tagService;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDataBinder) {
@@ -163,17 +167,7 @@ public class SettingsController {
     @PostMapping(TAGS + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
-
-        Tag tag = tagRepository.findByTitle(title);
-        // Optional 로 바꾼 후
-        // Tag tag =   tagRepository.findByTitle(title).orElseGet(() -> tagRepository.save(Tag.builder()
-        //                      .title(tagForm.getTagTitle())
-        //                      .build())); // findByTitle 쪽도 return 값을 Optional 로 바꿔야함.
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(title).build()); // tagForm
-        }
-
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
 
         return ResponseEntity.ok().build();

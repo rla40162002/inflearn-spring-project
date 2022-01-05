@@ -1,4 +1,4 @@
-package com.studylecture.settings.form;
+package com.studylecture.tag;
 
 import lombok.Data;
 
