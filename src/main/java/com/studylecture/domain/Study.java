@@ -23,6 +23,8 @@ import java.util.Set;
         @NamedAttributeNode("managers")})
 @NamedEntityGraph(name = "Study.withManagers", attributeNodes = {
         @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withMembers", attributeNodes = {
+        @NamedAttributeNode("members")})
 @Entity
 @Getter
 @Setter
@@ -78,12 +80,16 @@ public class Study {
     private boolean useBanner; // 배너 사용 여부
 
     public void addManager(Account account) {
-        this.managers.add(account);
+        this.getManagers().add(account);
     } // addManager
 
     public void addMember(Account account) {
-        this.members.add(account);
+        this.getMembers().add(account);
     } // addMember
+
+    public void removeMember(Account account) {
+        this.getMembers().remove(account);
+    }
 
 
     public boolean isJoinable(UserAccount userAccount) {
@@ -152,5 +158,6 @@ public class Study {
     public boolean isRemovable() {
         return !this.published; // TODO : 모임을 했던 스터디는 삭제 못하는 조건 추가
     } // isRemovable
+
 
 }
