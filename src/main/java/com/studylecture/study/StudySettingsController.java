@@ -269,4 +269,13 @@ public class StudySettingsController {
         attributes.addFlashAttribute("message", "스터디 이름을 수정했습니다.");
         return "redirect:/study/" + studyToUpdateStatus.getEncodePath() + "/settings/study";
     } // updateStudyTitle
+
+    @PostMapping("/study/remove")
+    public String removeStudy(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study studyToUpdateStatus = studyService.getStudyToUpdateStatus(account, path);
+
+        studyService.removeStudy(studyToUpdateStatus);
+
+        return "redirect:/"; // 삭제 후 홈으로 리다이렉트
+    } // removeStudy
 }

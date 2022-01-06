@@ -148,4 +148,9 @@ public class Study {
     public String getEncodePath() {
         return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
     } // getEncodePath
+
+    public boolean isRemovable() {
+        return !this.published; // TODO : 모임을 했던 스터디는 삭제 못하는 조건 추가
+    } // isRemovable
+
 }
