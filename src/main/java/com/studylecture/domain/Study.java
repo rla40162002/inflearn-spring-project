@@ -4,6 +4,8 @@ import com.studylecture.account.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -143,4 +145,7 @@ public class Study {
                 || this.recruitingUpdateDateTime.isBefore(LocalDateTime.now().minusHours(1));
     } // canUpdateRecruiting
 
+    public String getEncodePath() {
+        return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
+    } // getEncodePath
 }
