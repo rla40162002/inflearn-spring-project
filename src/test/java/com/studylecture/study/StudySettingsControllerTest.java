@@ -85,7 +85,7 @@ public class StudySettingsControllerTest extends StudyControllerTest {
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeExists("studyDescriptionForm"));
 
-    } // 스터디 소개 수정 - 성공
+    } // 스터디 소개 수정 - 실패
 
 
 }
