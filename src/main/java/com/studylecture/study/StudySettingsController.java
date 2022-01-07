@@ -46,6 +46,7 @@ public class StudySettingsController {
         model.addAttribute(study);
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(study, StudyDescriptionForm.class));
+        // study 정보를 studyDescriptionForm 에 넣기
 
         return "study/settings/description";
     } // viewStudySetting
