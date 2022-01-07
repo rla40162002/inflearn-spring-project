@@ -27,13 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class StudyControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    protected MockMvc mockMvc;
     @Autowired
-    StudyRepository studyRepository;
+    protected StudyRepository studyRepository;
     @Autowired
-    StudyService studyService;
+    protected StudyService studyService;
     @Autowired
-    AccountRepository accountRepository;
+    protected AccountRepository accountRepository;
 
     @AfterEach
     void afterEach() {
@@ -114,7 +114,7 @@ class StudyControllerTest {
     @WithAccount("kyw")
     @DisplayName("스터디 구성원 조회")
     @Test
-    void inquiryMember() throws Exception{
+    void inquiryMember() throws Exception {
         Study study = new Study();
         study.setPath("test-path");
         study.setTitle("test-title");
@@ -128,4 +128,56 @@ class StudyControllerTest {
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("study"));
     } // 스터디 구성원 조회
+
+    @WithAccount("kyw")
+    @DisplayName("스터디 가입")
+    @Test
+    void joinStudy() throws Exception {
+        Account kyw1023 = createAccount("kyw1023"); // 얘가 메니저
+        Study study = createStudy("test-study", kyw1023);
+
+        mockMvc.perform(get("/study/" + study.getPath() + "/join"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/members"));
+
+        Account kyw = accountRepository.findByNickname("kyw"); // 얘가 로그인 되어 있는 얘 WithAccount
+        assertTrue(study.getMembers().contains(kyw));
+
+    } // 스터디 가입
+
+    @WithAccount("kyw")
+    @DisplayName("스터디 탈퇴")
+    @Test
+    void leaveStudy() throws Exception {
+        Account kyw1023 = createAccount("kyw1023"); // 얘가 메니저
+        Study study = createStudy("test-study", kyw1023);
+
+        Account kyw = accountRepository.findByNickname("kyw"); // 얘가 로그인 되어 있는 얘 WithAccount
+        studyService.addMember(study, kyw);
+
+        mockMvc.perform(get("/study/" + study.getPath() + "/leave"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/study/" + study.getPath() + "/members"));
+
+        assertFalse(study.getMembers().contains(kyw));
+
+    } // 스터디 탈퇴
+
+
+    protected Account createAccount(String nickname) {
+        Account account = new Account();
+        account.setNickname(nickname);
+        account.setEmail(nickname + "@email.com");
+        accountRepository.save(account);
+        return account;
+    } // createAccount
+
+    protected Study createStudy(String path, Account manager) {
+        Study study = new Study();
+        study.setPath(path);
+        studyService.createNewStudy(study, manager);
+        return study;
+    } // createStudy
+
+
 }

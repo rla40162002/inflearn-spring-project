@@ -42,7 +42,7 @@ public class StudySettingsController {
 
     @GetMapping("/description")
     public String viewStudySetting(@CurrentAccount Account account, @PathVariable String path, Model model) {
-        Study study = studyService.getStudy(path);
+        Study study = studyService.getStudyToUpdate(account, path);
         model.addAttribute(study);
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(study, StudyDescriptionForm.class));
