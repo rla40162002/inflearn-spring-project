@@ -1,5 +1,6 @@
 package com.studylecture.domain;
 
+import com.studylecture.account.UserAccount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class Event {
     private Study study; // 어느 스터디에 속한 이벤트인지
 
     @ManyToOne
-    private Account createBy; // 모임 주최자(만든사람)
+    private Account createdBy; // 모임 주최자(만든사람)
 
     @Column(nullable = false)
     private String title;
@@ -50,4 +51,37 @@ public class Event {
 
     @Enumerated(EnumType.STRING)
     private EventType eventType; // 방식. 선착순(FCFS), 확인(CONFIRMATIVE)
+
+    public boolean isEnrollable(UserAccount userAccount) {
+        return isNotClosed() && !isAlreadyEnrolled(userAccount);
+    } // isEnrollable
+
+    public boolean isDisenrollable(UserAccount userAccount) {
+        return isNotClosed() && isAlreadyEnrolled(userAccount);
+    } // isDisenrollable
+
+
+    private boolean isAlreadyEnrolled(UserAccount userAccount) {
+        Account account = userAccount.getAccount();
+        for (Enrollment e : this.enrollments) {
+            if (e.getAccount().equals(account)) {
+                return true;
+            }
+        } // for
+        return false;
+    } // isAlreadyEnrolled
+
+    private boolean isNotClosed() {
+        return this.endEnrollmentDateTime.isAfter(LocalDateTime.now());
+    } // isNotClosed
+
+    public boolean isAttended(UserAccount userAccount) {
+        Account account = userAccount.getAccount();
+        for (Enrollment e : enrollments) {
+            if (e.getAccount().equals(account) && e.isAttended()) {
+                return true;
+            }
+        }// for
+        return false;
+    } // isAttended
 }
