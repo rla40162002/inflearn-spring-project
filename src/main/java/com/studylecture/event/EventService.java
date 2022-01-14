@@ -29,4 +29,9 @@ public class EventService {
         modelMapper.map(eventForm, event);
         // TODO 모집 인원을 늘린 선착순 모임의 경우, 자동으로 추가 인원의 참가 신청을 확정 상태로 변경해야 함
     } // updateEvent
+
+    public void deleteEvent(Event event) {
+        eventRepository.delete(event);
+    } // deleteEvent
+
 }

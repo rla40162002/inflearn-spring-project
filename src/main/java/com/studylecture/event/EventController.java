@@ -126,7 +126,15 @@ public class EventController {
 
         eventService.updateEvent(event, eventForm);
         return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
-    }
+    } // updateEventSubmit
+
+    @DeleteMapping("/events/{id}")
+    public String cancelEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id) {
+        Study study = studyService.getStudyToUpdateStatus(account, path);
+        eventService.deleteEvent(eventRepository.findById(id).orElseThrow());
+
+        return "redirect:/study/" + study.getEncodePath() + "/events";
+    } // cancelEvent
 
 
 }
