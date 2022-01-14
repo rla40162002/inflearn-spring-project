@@ -93,4 +93,7 @@ public class Event {
         return this.limitOfEnrollments - (int) this.enrollments.stream().filter(Enrollment::isAccepted).count();
     } // numberOfRemainSpots
 
+    public long numberOfAcceptedEnrollments() { // 참여한 사람
+        return this.enrollments.stream().filter(Enrollment::isAccepted).count();
+    }
 }

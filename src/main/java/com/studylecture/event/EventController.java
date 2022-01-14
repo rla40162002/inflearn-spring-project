@@ -79,9 +79,9 @@ public class EventController {
         List<Event> oldEvents = new ArrayList<>();
 
         events.forEach(e -> {
-            if(e.getEndDateTime().isBefore(LocalDateTime.now())){
+            if (e.getEndDateTime().isBefore(LocalDateTime.now())) {
                 oldEvents.add(e);
-            }else{
+            } else {
                 newEvents.add(e);
             }
         });
@@ -94,5 +94,39 @@ public class EventController {
         return "study/events";
 
     } // viewEvents
+
+    @GetMapping("/events/{id}/edit")
+    public String updateEventForm(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id, Model model) {
+        Study study = studyService.getStudyToUpdate(account, path);
+        Event event = eventRepository.findById(id).orElseThrow();
+
+        model.addAttribute(account);
+        model.addAttribute(study);
+        model.addAttribute(event);
+        model.addAttribute(modelMapper.map(event, EventForm.class));
+
+        return "event/update-form";
+    } // updateEventForm
+
+    @PostMapping("/events/{id}/edit")
+    public String updateEventSubmit(@CurrentAccount Account account, @PathVariable String path, @PathVariable Long id,
+                                    @Valid EventForm eventForm, Errors errors, Model model) {
+        Study study = studyService.getStudyToUpdate(account, path);
+        Event event = eventRepository.findById(id).orElseThrow();
+
+        eventForm.setEventType(event.getEventType()); // 이상한 입력이 들어오더라도 기존 타입으로 고정(덮어쓰기)
+        eventValidator.validateUpdateForm(eventForm, event, errors);
+
+        if (errors.hasErrors()) {
+            model.addAttribute(study);
+            model.addAttribute(account);
+            model.addAttribute(event);
+            return "event/update-form";
+        }
+
+        eventService.updateEvent(event, eventForm);
+        return "redirect:/study/" + study.getEncodePath() + "/events/" + event.getId();
+    }
+
 
 }
