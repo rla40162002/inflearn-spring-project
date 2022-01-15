@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NamedEntityGraph(
         name = "Event.withEnrollments",
@@ -51,7 +53,7 @@ public class Event {
     private Integer limitOfEnrollments; // 참가 신청을 최대 몇개까지 받을 수 있는지
 
     @OneToMany(mappedBy = "event")
-    private List<Enrollment> enrollments;
+    private List<Enrollment> enrollments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private EventType eventType; // 방식. 선착순(FCFS), 확인(CONFIRMATIVE)
@@ -95,5 +97,61 @@ public class Event {
 
     public long numberOfAcceptedEnrollments() { // 참여한 사람
         return this.enrollments.stream().filter(Enrollment::isAccepted).count();
-    }
+    } // numberOfAcceptedEnrollments
+
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
+        enrollment.setEvent(this); // 이것도 해줘야 한다.
+    } // addEnrollment
+
+    public void removeEnrollment(Enrollment enrollment) {
+        this.enrollments.remove(enrollment);
+        enrollment.setEvent(null);
+    } // removeEnrollment
+
+    public boolean isAbleToAcceptWaitingEnrollment() {
+        return this.eventType == EventType.FCFS && this.limitOfEnrollments > this.numberOfAcceptedEnrollments();
+    } // 선착순이고 모집인원이 참가신청한 인원보다 많을 때
+
+    public boolean canAccept(Enrollment enrollment) {
+        return this.eventType == EventType.CONFIRMATIVE && this.enrollments.contains(enrollment)
+                && !enrollment.isAttended() && !enrollment.isAccepted();
+    } // canAccept
+
+    public boolean canReject(Enrollment enrollment) {
+        return this.eventType == EventType.CONFIRMATIVE && this.enrollments.contains(enrollment)
+                && !enrollment.isAttended() && enrollment.isAccepted();
+    } // canReject 참가확정 했다가 다시 취소할 수 있는지
+
+    private List<Enrollment> getWaitingList() {
+        return this.enrollments.stream().filter(enrollment -> !enrollment.isAccepted()).collect(Collectors.toList());
+        // 참가 확정 짓지 않은 수
+    } // getWaitingList
+
+    public void acceptWaitingList() {
+        if (this.isAbleToAcceptWaitingEnrollment()) { // 최대 인원 수정했을 때 자동으로 대기중인 인원 참가 확정 시켜주는 부분
+            List<Enrollment> waitingList = getWaitingList();
+            int numberToAccept = (int) Math.min(this.limitOfEnrollments - this.numberOfAcceptedEnrollments(), waitingList.size());
+            waitingList.subList(0, numberToAccept).forEach(e -> e.setAccepted(true));
+        }
+    } // acceptWaitingList
+
+    public void acceptNextWaitingEnrollment() {
+        if (this.isAbleToAcceptWaitingEnrollment()) {
+            Enrollment enrollmentToAccept = this.getTheFirstWaitingEnrollment();
+            if (enrollmentToAccept != null) {
+                enrollmentToAccept.setAccepted(true);
+            }
+        }
+    } // acceptNextWaitingEnrollment
+
+    private Enrollment getTheFirstWaitingEnrollment() {
+        for (Enrollment e : this.enrollments) {
+            if (!e.isAccepted()) { // 참가확정이 되지 않은 것들 중에 가장 앞에 있는 enrollment
+                return e;
+            }
+        } // for
+        return null;
+    } // getTheFirstWaitingEnrollment
+
 }
