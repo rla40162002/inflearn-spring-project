@@ -53,17 +53,18 @@ public class Event {
     private Integer limitOfEnrollments; // 참가 신청을 최대 몇개까지 받을 수 있는지
 
     @OneToMany(mappedBy = "event")
+    @OrderBy("enrolledAt")
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private EventType eventType; // 방식. 선착순(FCFS), 확인(CONFIRMATIVE)
 
     public boolean isEnrollable(UserAccount userAccount) {
-        return isNotClosed() && !isAlreadyEnrolled(userAccount);
+        return isNotClosed() && !this.isAttended(userAccount) && !isAlreadyEnrolled(userAccount);
     } // isEnrollable
 
     public boolean isDisenrollable(UserAccount userAccount) {
-        return isNotClosed() && isAlreadyEnrolled(userAccount);
+        return isNotClosed() && !this.isAttended(userAccount) && isAlreadyEnrolled(userAccount);
     } // isDisenrollable
 
 
@@ -115,6 +116,7 @@ public class Event {
 
     public boolean canAccept(Enrollment enrollment) {
         return this.eventType == EventType.CONFIRMATIVE && this.enrollments.contains(enrollment)
+                && this.limitOfEnrollments > this.numberOfAcceptedEnrollments()
                 && !enrollment.isAttended() && !enrollment.isAccepted();
     } // canAccept
 
@@ -153,5 +155,19 @@ public class Event {
         } // for
         return null;
     } // getTheFirstWaitingEnrollment
+
+    public void accept(Enrollment enrollment) {
+        if (this.eventType == EventType.CONFIRMATIVE && this.limitOfEnrollments > this.numberOfAcceptedEnrollments()) {
+            // 관리자 확인이고, 남은 자리가 있으면 신청 수락
+            enrollment.setAccepted(true);
+        }
+    } // accept
+
+    public void reject(Enrollment enrollment) {
+        if (this.eventType == EventType.CONFIRMATIVE) {
+            // 신청 취소
+            enrollment.setAccepted(false);
+        }
+    } // reject
 
 }
