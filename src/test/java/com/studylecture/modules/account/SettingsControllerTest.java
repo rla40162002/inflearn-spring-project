@@ -1,6 +1,7 @@
 package com.studylecture.modules.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.studylecture.infra.AbstractContainerBaseTest;
 import com.studylecture.infra.MockMvcTest;
 import com.studylecture.modules.tag.Tag;
 import com.studylecture.modules.tag.TagForm;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @MockMvcTest
-class SettingsControllerTest {
+class SettingsControllerTest extends AbstractContainerBaseTest {
 
 
     @Autowired

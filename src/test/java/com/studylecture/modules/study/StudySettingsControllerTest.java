@@ -1,5 +1,6 @@
 package com.studylecture.modules.study;
 
+import com.studylecture.infra.AbstractContainerBaseTest;
 import com.studylecture.infra.MockMvcTest;
 import com.studylecture.modules.account.Account;
 import com.studylecture.modules.account.AccountFactory;
@@ -16,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @MockMvcTest
-class StudySettingsControllerTest {
+class StudySettingsControllerTest extends AbstractContainerBaseTest {
 
     @Autowired
     MockMvc mockMvc;
