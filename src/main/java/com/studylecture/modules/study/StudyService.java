@@ -26,7 +26,8 @@ public class StudyService {
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = studyRepository.save(study);
         newStudy.addManager(account);
-        eventPublisher.publishEvent(new StudyCreatedEvent(newStudy));
+//        eventPublisher.publishEvent(new StudyCreatedEvent(newStudy));
+        // 스터디를 만들 때 알림이 아닌, 공개했을 때 알림을 보내야 한다.
 
         return newStudy;
     } // createNewStudy
@@ -112,6 +113,8 @@ public class StudyService {
 
     public void publish(Study study) {
         study.publish();
+        this.eventPublisher.publishEvent(new StudyCreatedEvent(study));
+        // 스터디를 공개했을 때 알림보내기
     }
 
     public void close(Study study) {
