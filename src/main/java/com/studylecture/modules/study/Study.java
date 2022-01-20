@@ -94,7 +94,7 @@ public class Study {
     }
 
     public String getImage() {
-        return image != null ? image : "/images/default_banner.png";
+        return image != null ? image : "/images/default_banner2.png";
     }
 
     public void publish() {

@@ -39,7 +39,7 @@ public class EventService {
 
     public void deleteEvent(Event event) {
         eventRepository.delete(event);
-        // TODO : Enrollment가 있을 때 삭제가 되지 않는 문제
+        // TODO : Enrollment가 있을 때 삭제가 되지 않는 문제. 해당 이벤트가 삭제될때 enrollment들도 같이 삭제가 되어야함
         eventPublisher.publishEvent(new StudyUpdateEvent(event.getStudy(), "'" + event.getTitle() + "' 모임이 삭제되었습니다."));
     } // deleteEvent
 
