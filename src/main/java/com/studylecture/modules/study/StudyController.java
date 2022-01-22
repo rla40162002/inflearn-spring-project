@@ -82,5 +82,12 @@ public class StudyController {
         return "redirect:/study/" + study.getEncodePath() + "/members";
     } // joinStudy
 
+    /*
+    @GetMapping("/study/data")
+    public String generateTestData(@CurrentAccount Account account) {
+        studyService.generateTestStudies(account);
 
+        return "redirect:/";
+    } // generateTestData 임시
+    */
 }

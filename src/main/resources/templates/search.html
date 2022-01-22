@@ -8,19 +8,19 @@
 
 <div class="container">
     <div class="py-5 text-center">
-        <p class="lead" th:if="${#lists.isEmpty(studyList)}">
+        <p class="lead" th:if="${studyPage.getTotalElements() == 0}">
             검색어 <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 스터디가 없습니다.
         </p>
-        <p class="lead" th:if="${!#lists.isEmpty(studyList)}">
+        <p class="lead" th:if="${studyPage.getTotalElements() > 0}">
             검색어 <strong th:text="${keyword}" id="keyword" class="context"></strong>에 해당하는 스터디를
-            <span th:text="${studyList.size()}"></span>개 찾았습니다.
+            <span th:text="${studyPage.getTotalElements()}"></span>개 찾았습니다.
         </p>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-sm-10">
             <div class="row">
-                <div class="col-md-4" th:each="study: ${studyList}">
+                <div class="col-md-4" th:each="study: ${studyPage.getContent()}">
                     <div class="card mb-4 shadow-sm">
                         <img th:src="${study.image}" class="context card-img-top" th:alt="${study.title}">
                         <div class="card-body">
@@ -48,7 +48,7 @@
                             <div class="d-flex justify-content-center-between align-items-center">
                                 <small class="text-muted me-auto">
                                     <i class="fa fa-user-circle"></i>
-                                    <span th:text="${study.members.size()}"></span>명
+                                    <span th:text="${study.memberCount}"></span>명
                                 </small>
                                 <small class="text-muted date" th:text="${study.publishedDateTime}">9 mins</small>
                             </div>

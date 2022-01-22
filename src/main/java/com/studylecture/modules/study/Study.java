@@ -26,9 +26,11 @@ public class Study {
     @GeneratedValue
     private Long id;
 
+    @Builder.Default
     @ManyToMany
     private Set<Account> managers = new HashSet<>(); // 관리자 (여려 명)
 
+    @Builder.Default
     @ManyToMany
     private Set<Account> members = new HashSet<>();
 
@@ -47,9 +49,11 @@ public class Study {
     @Basic(fetch = FetchType.EAGER)
     private String image;
 
+    @Builder.Default
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 
+    @Builder.Default
     @ManyToMany
     private Set<Zone> zones = new HashSet<>();
 
@@ -67,16 +71,20 @@ public class Study {
 
     private boolean useBanner; // 배너 사용 여부
 
+    private int memberCount;
+
     public void addManager(Account account) {
         this.getManagers().add(account);
     } // addManager
 
     public void addMember(Account account) {
         this.getMembers().add(account);
+        this.memberCount++;
     } // addMember
 
     public void removeMember(Account account) {
         this.getMembers().remove(account);
+        this.memberCount--;
     }
 
 

@@ -5,6 +5,10 @@ import com.studylecture.modules.account.Account;
 import com.studylecture.modules.study.Study;
 import com.studylecture.modules.study.StudyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,14 +35,15 @@ public class MainController {
     }
 
     @GetMapping("/search/study")
-    public String searchStudy(String keyword, Model model) {
-        List<Study> studyList = studyRepository.findByKeyword(keyword);
+    public String searchStudy(String keyword, Model model,
+                              @PageableDefault(size = 9, sort = "publishedDateTime", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<Study> studyPage = studyRepository.findByKeyword(keyword, pageable);
 
         model.addAttribute("keyword", keyword);
-        model.addAttribute(studyList);
+        model.addAttribute("studyPage", studyPage);
 
         return "search";
     } // searchStudy
-
 
 }
