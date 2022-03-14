@@ -26,6 +26,9 @@ public class MainController {
         if (account != null) {
             model.addAttribute(account); // null이 아니면 로그인 한 것이므로 계정 넘겨줌
         }
+
+        model.addAttribute("studyList", studyRepository.findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(true, false));
+
         return "index";
     }
 
