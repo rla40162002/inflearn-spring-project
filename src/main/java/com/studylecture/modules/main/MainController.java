@@ -1,7 +1,9 @@
 package com.studylecture.modules.main;
 
+import com.studylecture.modules.account.AccountRepository;
 import com.studylecture.modules.account.CurrentAccount;
 import com.studylecture.modules.account.Account;
+import com.studylecture.modules.event.EnrollmentRepository;
 import com.studylecture.modules.study.Study;
 import com.studylecture.modules.study.StudyRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +22,22 @@ import java.util.List;
 public class MainController {
 
     private final StudyRepository studyRepository;
+    private final AccountRepository accountRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     @GetMapping("/")
     public String home(@CurrentAccount Account account, Model model) {
         if (account != null) {
-            model.addAttribute(account); // null이 아니면 로그인 한 것이므로 계정 넘겨줌
+//            model.addAttribute(account); // null이 아니면 로그인 한 것이므로 계정 넘겨줌
+            Account accountLoaded = accountRepository.findAccountWithTagsAndZonesById(account.getId());
+            model.addAttribute(accountLoaded);
+            model.addAttribute("enrollmentList", enrollmentRepository.findByAccountAndAcceptedOrderByEnrolledAtDesc(accountLoaded, true));
+            model.addAttribute("studyList", studyRepository.findByAccount(accountLoaded.getTags(), accountLoaded.getZones()));
+
+            model.addAttribute("studyManagerOf", studyRepository.findFirst5ByManagersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
+            model.addAttribute("studyMemberOf", studyRepository.findFirst5ByMembersContainingAndClosedOrderByPublishedDateTimeDesc(account, false));
+
+            return "index-after-login";
         }
 
         model.addAttribute("studyList", studyRepository.findFirst9ByPublishedAndClosedOrderByPublishedDateTimeDesc(true, false));
