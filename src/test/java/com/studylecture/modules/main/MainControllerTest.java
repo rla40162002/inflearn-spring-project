@@ -80,6 +80,14 @@ class MainControllerTest extends AbstractContainerBaseTest {
     }
 
     @Test
+    @DisplayName("이상한 URL")
+    void wrongURL() throws Exception {
+        mockMvc.perform(post("/www"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(redirectedUrl("/error"));
+    } // 이것도 안 되는 중
+
+    @Test
     @DisplayName("로그아웃")
 //    @WithMockUser // SpringSecurity 에 User 타입에 해당하는 걸로 넣어준다.
     void logout() throws Exception {

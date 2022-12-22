@@ -53,7 +53,9 @@ class StudySettingsControllerTest extends AbstractContainerBaseTest {
         Study study = studyFactory.createStudy("test-study", kyw1023);
 
         mockMvc.perform(get("/study/" + study.getPath() + "/settings/description"))
-                .andExpect(status().isForbidden());
+//                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"));
     } // 스터디 소개 수정 폼 조회 - 실패(권한 없음)
 
     @WithAccount("kyw")
